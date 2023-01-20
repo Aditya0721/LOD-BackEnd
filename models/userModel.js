@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     address:{
+        state:{
+            type:String,
+            required:true
+        },
         district:{
             type: String,
             required: true

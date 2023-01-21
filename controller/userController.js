@@ -14,44 +14,52 @@ exports.signUp = async(req, res)=>{
         
         let address = []
 
+        let apiResult = true
+
         await axios.get("http://localhost:4000/data?pincode="+req.body.address.pinCode).
         then((res)=>{address = res.data[0]})
-        .catch((err)=>{console.log(err); return res.status(500).send("json server error")})
+        .catch((err)=>{apiResult=false})
     
-        const user = {
-            userId: userId,
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: req.body.password,
-            phoneNumber: req.body.phoneNumber,
-            address:{ 
-                state: address.stateName,
-                district: address.districtName,
-                city: address.taluk,
-                pinCode: req.body.address.pinCode,
-                landMark: req.body.address.landMark
-            },
-            cardDetails: req.body.cardDetails.map((card)=>{
-                return {cardId: card.cardId, cardNumber:card.cardNumber}
-            })
-            ,
-            role: "user"
-        }
-
-        const result = await userModel.create(user)
-
-        if(result!==null){
-            return res.status(200).json({
-                data: result,
-                success: `user created with userId ${result.userId}`
-            })
+        if(apiResult){
+            const user = {
+                userId: userId,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email,
+                password: req.body.password,
+                phoneNumber: req.body.phoneNumber,
+                address:{ 
+                    state: address.stateName,
+                    district: address.districtName,
+                    city: address.taluk,
+                    pinCode: req.body.address.pinCode,
+                    landMark: req.body.address.landMark
+                },
+                cardDetails: req.body.cardDetails.map((card)=>{
+                    return {cardId: card.cardId, cardNumber:card.cardNumber}
+                })
+                ,
+                role: "user"
+            }
+    
+            const result = await userModel.create(user)
+    
+            if(result!==null){
+                return res.status(200).json({
+                    data: result,
+                    success: `user created with userId ${result.userId}`
+                })
+            }
+            else{
+                return res.staus(400).json({
+                    status:`user already exists`
+                })
+            }
         }
         else{
-            return res.staus(400).json({
-                status:`user already exists`
-            })
+            return res.status(500).send("json server error")
         }
+        
     }
     catch(err){
         console.log(err)

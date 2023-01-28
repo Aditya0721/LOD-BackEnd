@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "server": "nodemon index.js",
+    "json-server": "npx json-server pincode.json --watch --port 4000",
+    "start": "start npm run server && start npm run json-server"
   },
   "repository": {
     "type": "git",

@@ -33,7 +33,8 @@ exports.signUp = async(req, res)=>{
                     district: address.districtName,
                     city: address.taluk,
                     pinCode: req.body.address.pinCode,
-                    landMark: req.body.address.landMark
+                    landMark: req.body.address.landMark,
+                    locality: req.body.address.locality
                 },
                 cardDetails: req.body.cardDetails.map((card)=>{
                     return {cardId: card.cardId, cardNumber:card.cardNumber}
@@ -47,7 +48,7 @@ exports.signUp = async(req, res)=>{
             if(result!==null){
                 return res.status(200).json({
                     data: result,
-                    success: `user created with userId ${result.userId}`
+                    status: `user created with userId ${result.userId}`
                 })
             }
             else{

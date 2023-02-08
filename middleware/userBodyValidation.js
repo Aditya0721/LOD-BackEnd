@@ -7,21 +7,20 @@ exports.userBodyValidator = async (req, res, next) => {
     
     try{
         if(userUtility.validEmail(req.body.email)){
-        const user = await userModel.findOne({email:req.body.email})
-        //console.log(user)
-        if(user==null){
-        const result = await emailOTPVerfication.sendEmail(req.body.email)
-        if(result){
-            console.log(result)
-            next()
-        }
-        else{
-            return res.status(400).send("some error occured")
-        }
-        }
-        else{
-        return res.status(400).json({errorMessage:"emailid already exists"})
-        }
+            const user = await userModel.findOne({email:req.body.email})
+            if(user==null){
+                const result = await emailOTPVerfication.sendEmail(req.body.email)
+                if(result){
+                    console.log(result)
+                    next()
+                }
+                else{
+                    return res.status(400).send("some error occured")
+                }
+            }
+            else{
+                return res.status(400).json({errorMessage:"emailid already exists"})
+            }
         }
         else{
             return res.status(400).send("Invalid Email format")

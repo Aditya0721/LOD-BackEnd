@@ -7,4 +7,6 @@ userRouter.post("/signup", [userBodyValidator.userBodyValidator], userController
 
 userRouter.post("/login", userController.logIn)
 
+userRouter.get("/:phoneNumber", userController.getUserByPhoneNumber)
+
 module.exports = userRouter

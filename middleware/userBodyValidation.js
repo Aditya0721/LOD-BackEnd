@@ -2,6 +2,7 @@ const userModel = require("../models/userModel")
 const userUtility = require("../utility/validEmail")
 const emailOTPVerfication = require("../utility/emailOTPVerification")
 
+
 exports.userBodyValidator = async (req, res, next) => {
     let valid = true
     

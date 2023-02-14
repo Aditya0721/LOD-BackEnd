@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const userRouter = require("./user")
 const adminRouter = require("./admin")
+const shopRouter = require("./shop")
 
 router.get("/home", (req, res)=>{
     return res.status(200).send("Home Page")
@@ -10,5 +11,7 @@ router.get("/home", (req, res)=>{
 router.use("/user", userRouter)
 
 router.use("/admin", adminRouter)
+
+router.use("/shop", shopRouter)
 
 module.exports = router

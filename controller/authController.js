@@ -1,6 +1,7 @@
 const userModel = require("../models/userModel")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const axios = require("axios")
 
 exports.signUp = async(req, res)=>{
     try{
@@ -12,15 +13,8 @@ exports.signUp = async(req, res)=>{
             newId = lastUserId[0].userId.substring(5)
             userId = req.body.firstName[0]+date.getTime().toString().substring(9, 13)+(parseInt(newId)+1)
         }
-        
         let address = []
-
         let apiResult = true
-
-        await axios.get("http://localhost:4000/data?pincode="+req.body.address.pinCode).
-        then((res)=>{address = res.data[0]})
-        .catch((err)=>{apiResult=false})
-    
         if(apiResult){
             const user = {
                 userId: userId,
@@ -30,9 +24,9 @@ exports.signUp = async(req, res)=>{
                 password: bcrypt.hashSync(req.body.password, 8),
                 phoneNumber: req.body.phoneNumber,
                 address:{ 
-                    state: address.stateName,
-                    district: address.districtName,
-                    city: address.taluk,
+                    state: req.body.address.state,
+                    district: req.body.address.district,
+                    city: req.body.address.city,
                     pinCode: req.body.address.pinCode,
                     landMark: req.body.address.landMark,
                     locality: req.body.address.locality
@@ -41,7 +35,7 @@ exports.signUp = async(req, res)=>{
                     return {cardId: card.cardId, cardNumber:card.cardNumber}
                 })
                 ,
-                role: "user"
+                role: req.body.role
             }
     
             const result = await userModel.create(user)
@@ -71,14 +65,15 @@ exports.signUp = async(req, res)=>{
 
 exports.logIn = (req, res)=>{
     try{
-        const token = jwt.sign({email:req.user.email, issuedAt: new Date()}, 'SECRET SALT', {
+        console.log(req.user)
+        const token = jwt.sign({email:req.user.email, role:req.user.role, issuedAt: new Date()}, 'SECRET SALT', {
             expiresIn:36000
         })
-
+        const user = req.user._doc
+        console.log(user)
+        //res.setHeader("x-auth-token", token)
         res.status(200).send({
-            email: req.user.email,
-            phoneNumber: req.query.phoneNumber,
-            name: req.user.firstName,
+            ...user,
             token: token,
             isAuthenticated: true,
             message:'login successfull'

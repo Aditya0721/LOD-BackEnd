@@ -63,9 +63,10 @@ const userSchema = new mongoose.Schema({
     }],
     role:{
         type:String,
-        enum:['user', 'shopManager', 'admin'],
-        default: 'user'
+        enum:['CUSTOMER', 'SHOP KEEPER', 'ADMIN'],
+        default: 'CUSTOMER'
     }
-})
+}, { timestamps: true })
+
 const userModel = mongoose.model('User',  userSchema)
 module.exports = userModel

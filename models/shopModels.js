@@ -47,7 +47,12 @@ const shopSchema = new mongoose.Schema({
     rating:{
         type:Number
     },
-    reviews:[{userId:String, comment:String}]
+    reviews:[{userId:String, comment:String}],
+    isVerified:{
+        type:Boolean,
+        default: false,
+        required: true
+    }
 }, { timestamps: true })
 
 const shopModel = mongoose.model("Shop", shopSchema)

@@ -25,3 +25,34 @@ exports.createRequest = async(req, res)=>{
         return res.status(500).send("internal server error")
     }
 }
+
+exports.closeRequest = async(req, res)=>{
+    try{
+        const requestId = req.params.requestId
+
+        console.log(requestId)
+
+        const updatedRequest = await requestModel.findOneAndUpdate({requestId:requestId},{status:"CLOSED"})
+
+        //console.log(updatedRequest)
+        return res.status(200).send(updatedRequest)
+    }
+    catch(err){
+        console.log(err)
+        return res.status(500).send("internal server error")
+    }   
+}
+
+exports.fetchAll = async(req, res)=>{
+    try{
+        console.log("inside request fetch all")
+        const result = await requestModel.find({})
+
+        console.log(result)
+        return res.status(200).send(result)
+    }
+    catch(err){
+        console.log(err)
+        return res.status(500).send("internal server error")
+    }
+}

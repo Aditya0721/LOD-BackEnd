@@ -60,3 +60,19 @@ exports.verifyShopKeeper = (req, res, next)=>{
     }
     next()
 }
+
+exports.verifyCustomer = (req, res, next)=>{
+    console.log("inside verifyUser", req.role)
+    if(req.role !== "CUSTOMER"){
+        return res.status(401).json("You are not authorised to access this endpoint!")
+    }
+    next()
+}
+
+exports.verifyAdmin = (req, res, next)=>{
+    console.log("inside verifyAdmin", req.role)
+    if(req.role !== "ADMIN"){
+        return res.status(401).json("You are not authorised to access this endpoint!")
+    }
+    next()
+}

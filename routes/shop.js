@@ -9,4 +9,6 @@ shopRouter.get("/get/:userId", shopController.fetchByUser)
 
 shopRouter.get("/shops", shopController.fetchAll)
 
+shopRouter.put("/updateStatus/:shopId/:status",[authValidator.verifyToken, authValidator.verifyAdmin], shopController.updateStatus)
+
 module.exports = shopRouter

@@ -49,8 +49,9 @@ const shopSchema = new mongoose.Schema({
     },
     reviews:[{userId:String, comment:String}],
     isVerified:{
-        type:Boolean,
-        default: false,
+        type:String,
+        enum:["PENDING", "APPROVED", "REJECTED"],
+        default: "PENDING",
         required: true
     }
 }, { timestamps: true })

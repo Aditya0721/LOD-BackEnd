@@ -1,3 +1,4 @@
+const requestModel = require("../models/requestModel")
 const shopModel = require("../models/shopModels")
 
 exports.createShop = async(req, res)=>{
@@ -80,4 +81,23 @@ exports.fetchAll = async(req, res)=>{
             message:"Internal Server Error"
         })
     }
+}
+
+exports.updateStatus = async(req, res)=>{
+    try{
+        const shopId = req.params.shopId
+
+        const status = req.params.status
+
+        console.log(status, shopId)
+        await shopModel.updateOne({shopId:shopId},{isVerified:status})
+
+        const updatedShop = await shopModel.findOne({shopId:shopId})
+        //console.log(updatedRequest)
+        return res.status(200).send(updatedShop)
+    }
+    catch(err){
+        console.log(err)
+        return res.status(500).send("internal server error")
+    }   
 }

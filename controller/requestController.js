@@ -1,4 +1,7 @@
 const requestModel = require("../models/requestModel")
+const shopModel = require("../models/shopModels")
+const userModel = require("../models/userModel")
+const {sendCreateRequestMail, sendCloseRequestMail} = require("../utility/requestStatusEmail")
 
 exports.createRequest = async(req, res)=>{
     try{
@@ -16,7 +19,13 @@ exports.createRequest = async(req, res)=>{
             assignedTo:req.params.userId,
         }
 
+        const shop = await shopModel.findOne({shopId:newReq.shopId},{_id:0, userId:1})
+        
+        const user = await userModel.findOne({userId:shop.userId},{_id:0, email:1})
+
         const result = await requestModel.create(newReq)
+
+        sendCreateRequestMail(user.email)
 
         return res.status(200).send("request created successfully")
     }
@@ -30,10 +39,23 @@ exports.closeRequest = async(req, res)=>{
     try{
         const requestId = req.params.requestId
 
-        console.log(requestId)
+        //console.log(requestId)
+        
+        await requestModel.updateOne({requestId:requestId},{status:"CLOSED"})
+        
+        const updatedRequest = await requestModel.findOne({requestId:requestId})
 
-        const updatedRequest = await requestModel.findOneAndUpdate({requestId:requestId},{status:"CLOSED"})
+        console.log(updatedRequest)
 
+        const shop = await shopModel.findOne({shopId:updatedRequest.shopId},{_id:0, userId:1})
+        
+        console.log(shop)
+
+        const user = await userModel.findOne({userId:shop.userId},{_id:0, email:1})
+
+        console.log(user)
+
+        sendCloseRequestMail(user.email, updatedRequest.status)
         //console.log(updatedRequest)
         return res.status(200).send(updatedRequest)
     }

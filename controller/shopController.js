@@ -1,3 +1,4 @@
+const { response } = require("express")
 const requestModel = require("../models/requestModel")
 const shopModel = require("../models/shopModels")
 
@@ -100,4 +101,29 @@ exports.updateStatus = async(req, res)=>{
         console.log(err)
         return res.status(500).send("internal server error")
     }   
+}
+
+exports.updateMenu = async(req, res)=>{
+
+    try {
+        const shopId = req.params.shopId
+        const products = req.body.products
+    
+        const shop = await shopModel.findOne({shopId:shopId},{menu:1, _id:0})
+    
+        let newMenu = shop.menu
+        
+        console.log(products)
+
+        products.forEach((product)=>{newMenu.push(product)})
+    
+        console.log(newMenu)
+    
+        const result = await shopModel.updateOne({shopId:shopId}, {menu:newMenu})
+
+        return res.status(200).send("updated")
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error)
+    }
 }

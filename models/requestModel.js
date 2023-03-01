@@ -18,7 +18,7 @@ const requestSchema = mongoose.Schema({
         enum:['OPEN', 'CLOSED'],
         default:'OPEN'
     }
-},{timeStamps:true})
+}, {timestamps:true})
 
 const requestModel = mongoose.model("Request", requestSchema)
 

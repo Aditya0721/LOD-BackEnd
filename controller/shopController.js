@@ -103,7 +103,7 @@ exports.updateStatus = async(req, res)=>{
     }   
 }
 
-exports.updateMenu = async(req, res)=>{
+exports.addProductToMenu = async(req, res)=>{
 
     try {
         const shopId = req.params.shopId
@@ -120,6 +120,23 @@ exports.updateMenu = async(req, res)=>{
         console.log(newMenu)
     
         const result = await shopModel.updateOne({shopId:shopId}, {menu:newMenu})
+
+        return res.status(200).send("updated")
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send(error)
+    }
+}
+
+exports.updateMenu = async(req, res)=>{
+
+    try {
+        const shopId = req.params.shopId
+        const menu = req.body.menu
+
+        console.log(menu)
+
+        const result = await shopModel.updateOne({shopId:shopId}, {menu:menu})
 
         return res.status(200).send("updated")
     } catch (error) {

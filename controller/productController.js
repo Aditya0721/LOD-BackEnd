@@ -30,3 +30,20 @@ exports.createProduct = async(req, res)=>{
         return res.status(500).send(error)
     }
 }
+
+exports.fetchProduct = async(req, res)=>{
+    try {
+        const brand = req.query.brand
+        const type = req.query.type
+
+        console.log(brand, type)
+        const result = await productModel.find({brand:brand, type:type}, {productId:1, productName:1, _id:0})
+
+        console.log(result)
+
+        return res.status(200).send(result)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).send("Internal Error Occured")
+    }
+}

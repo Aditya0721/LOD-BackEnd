@@ -6,7 +6,7 @@ const {sendCreateRequestMail, sendCloseRequestMail} = require("../utility/reques
 exports.createRequest = async(req, res)=>{
     try{
         const lastReqId = await requestModel.find({},{requestId:1, _id:0}).sort({_id:-1}).limit(1)
-       
+        console.log(req.body)
         const date = new Date()
         let requestId = req.body.shopId[0]+date.getTime().toString().substring(9, 13)+1
         if(lastReqId.length!==0){
@@ -17,6 +17,7 @@ exports.createRequest = async(req, res)=>{
             requestId: requestId,
             shopId:req.body.shopId,
             assignedTo:req.params.userId,
+            action:"PENDING"
         }
 
         const shop = await shopModel.findOne({shopId:newReq.shopId},{_id:0, userId:1})
@@ -40,14 +41,14 @@ exports.closeRequest = async(req, res)=>{
         const requestId = req.params.requestId
 
         //console.log(requestId)
-        
-        await requestModel.updateOne({requestId:requestId},{status:"CLOSED"})
+        console.log(req.body.action)
+        await requestModel.updateOne({requestId:requestId},{status:"CLOSED", action:req.body.action})
         
         const updatedRequest = await requestModel.findOne({requestId:requestId})
 
         console.log(updatedRequest)
 
-        const shop = await shopModel.findOne({shopId:updatedRequest.shopId},{_id:0, userId:1})
+        const shop = await shopModel.findOne({shopId:updatedRequest.shopId})
         
         console.log(shop)
 
@@ -55,7 +56,7 @@ exports.closeRequest = async(req, res)=>{
 
         console.log(user)
 
-        sendCloseRequestMail(user.email, updatedRequest.status)
+        sendCloseRequestMail(user.email, shop.isVerified)
         //console.log(updatedRequest)
         return res.status(200).send(updatedRequest)
     }

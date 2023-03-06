@@ -2,45 +2,93 @@ const userModel = require("../models/userModel")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
 const axios = require("axios")
+const shopController = require("./shopController")
+const shopModel = require("../models/shopModels")
 
 exports.signUp = async(req, res)=>{
     try{
+        let user = {}
+        let shop = {}
+        if(req.body.user){
+            user = req.body.user
+            shop = req.body.shop
+            console.log(shop)
+        }
+        else{
+            user = req.body
+        }
+
         const lastUserId = await userModel.find({},{userId:1, _id:0}).sort({_id:-1}).limit(1)
        
         const date = new Date()
-        let userId = req.body.firstName[0]+date.getTime().toString().substring(9, 13)+1
+        let userId = user.firstName[0]+date.getTime().toString().substring(9, 13)+1
         if(lastUserId.length!==0){
             newId = lastUserId[0].userId.substring(5)
-            userId = req.body.firstName[0]+date.getTime().toString().substring(9, 13)+(parseInt(newId)+1)
+            userId = user.firstName[0]+date.getTime().toString().substring(9, 13)+(parseInt(newId)+1)
         }
-        let address = []
         let apiResult = true
         if(apiResult){
-            const user = {
+            const newUser = {
                 userId: userId,
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: req.body.email,
-                password: bcrypt.hashSync(req.body.password, 8),
-                phoneNumber: req.body.phoneNumber,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                password: bcrypt.hashSync(user.password, 8),
+                phoneNumber: user.phoneNumber,
                 address:{ 
-                    state: req.body.address.state,
-                    district: req.body.address.district,
-                    city: req.body.address.city,
-                    pinCode: req.body.address.pinCode,
-                    landMark: req.body.address.landMark,
-                    locality: req.body.address.locality
+                    state: user.address.state,
+                    district: user.address.district,
+                    city: user.address.city,
+                    pinCode: user.address.pinCode,
+                    landMark: user.address.landMark,
+                    locality: user.address.locality
                 },
-                cardDetails: req.body.cardDetails.map((card)=>{
+                cardDetails: user.cardDetails.map((card)=>{
                     return {cardId: card.cardId, cardNumber:card.cardNumber}
                 })
                 ,
-                role: req.body.role
+                role: user.role
             }
     
-            const result = await userModel.create(user)
-    
+            const resultUser = await userModel.create(newUser)
+            
+            let result = {...resultUser._doc}
+            if(result.role==="SHOP KEEPER"){
+                shop.userId = result.userId
+                shop.phoneNumber = result.phoneNumber
+                const lastShopId = await shopModel.find({},{shopId:1, _id:0}).sort({_id:-1}).limit(1)
+               
+                const date = new Date()
+                let shopId = shop.shopName[0]+date.getTime().toString().substring(9, 13)+1
+                if(lastShopId.length!==0){
+                    newId = lastShopId[0].shopId.substring(5)
+                    shopId = shop.shopName[0]+date.getTime().toString().substring(9, 13)+(parseInt(newId)+1)
+                }
+                const newShop = {
+                    shopId:shopId,
+                    shopName: shop.shopName,
+                    address:{ 
+                        state: shop.address.state,
+                        district: shop.address.district,
+                        city: shop.address.city,
+                        pinCode: shop.address.pinCode,
+                        landMark: shop.address.landMark,
+                        locality: shop.address.locality
+                    },
+                    phoneNumber:shop.phoneNumber,
+                    userId:shop.userId,
+                    menu:[],
+                    rating:0,
+                    review:[]
+                }
+                const shopResult = await shopModel.create(newShop)
+                
+                result.shopId = shopResult.shopId
+                console.log(result)
+            }
+            
             if(result!==null){
+                console.log(result)
                 return res.status(200).json({
                     data: result,
                     status: `user created with userId ${result.userId}`

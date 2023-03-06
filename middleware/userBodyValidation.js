@@ -5,12 +5,18 @@ const emailOTPVerfication = require("../utility/emailOTPVerification")
 
 exports.userBodyValidator = async (req, res, next) => {
     let valid = true
-    
     try{
-        if(userUtility.validEmail(req.body.email)){
-            const user = await userModel.findOne({email:req.body.email})
-            if(user==null){
-                const result = await emailOTPVerfication.sendEmail(req.body.email)
+        let user = {}
+        if(req.body.user){
+            user = req.body.user
+        }
+        else{
+            user = req.body
+        }
+        if(userUtility.validEmail(user.email)){
+            const resultUser = await userModel.findOne({email:user.email})
+            if(resultUser===null){
+                const result = await emailOTPVerfication.sendEmail(user.email)
                 if(result){
                     console.log(result)
                     next()

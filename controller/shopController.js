@@ -32,7 +32,7 @@ exports.createShop = async(req, res)=>{
         }
         const result = await shopModel.create(shop) 
 
-        return res.status(200).send(`shop created with shopId:${result.shopId}`)
+        return res.status(200).send({'message':`shop created with shopId:${result.shopId}`, 'shopId':result.shopId})
     }
     catch(err){
         console.log(err)

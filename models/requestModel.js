@@ -13,6 +13,11 @@ const requestSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    action:{
+        type:String,
+        enum:['PENDING','APPROVED', 'CLOSED'],
+        default:'PENDING'  
+    },
     status:{
         type:String,
         enum:['OPEN', 'CLOSED'],

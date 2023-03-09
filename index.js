@@ -11,6 +11,8 @@ app.use((req, res, next)=>{
     // console.log(req)
     res.setHeader('Access-Control-Allow-Origin', "http://localhost:3000")
 
+    res.setHeader('Access-Control-Allow-Origin', "http://16.170.243.211")
+
     res.setHeader('Access-Control-Allow-Methods', "GET, POST, OPTIONS, PUT, PATCH, DELETE")
 
     res.setHeader("Access-Control-Allow-Headers", "Origin, X-Auth-Token, Content-Type, Authorization, Content-Length, X-Requested-With, Accept");

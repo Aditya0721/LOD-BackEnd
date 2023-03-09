@@ -5,7 +5,7 @@ const authValidator = require("../middleware/authValidator")
 
 shopRouter.post("/create/:userId",[authValidator.verifyToken, authValidator.verifyShopKeeper], shopController.createShop)
 
-shopRouter.get("/get/:userId", shopController.fetchByUser)
+shopRouter.get("/shops/:userId", shopController.fetchByUser)
 
 shopRouter.get("/shops", shopController.fetchAll)
 

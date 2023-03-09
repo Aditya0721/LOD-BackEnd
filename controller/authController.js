@@ -114,14 +114,13 @@ exports.signUp = async(req, res)=>{
 exports.logIn = (req, res)=>{
     try{
         console.log(req.user)
-        const token = jwt.sign({email:req.user.email, role:req.user.role, issuedAt: new Date()}, 'SECRET SALT', {
+        const token = jwt.sign({...req.user, issuedAt: new Date()}, 'SECRET SALT', {
             expiresIn:36000
         })
         const user = req.user._doc
         console.log(user)
         //res.setHeader("x-auth-token", token)
         res.status(200).send({
-            ...user,
             token: token,
             isAuthenticated: true,
             message:'login successfull'

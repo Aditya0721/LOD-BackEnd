@@ -134,7 +134,7 @@ exports.updateMenu = async(req, res)=>{
         const shopId = req.params.shopId
         const menu = req.body.menu
 
-        console.log(menu)
+        console.log(menu, shopId)
 
         const result = await shopModel.updateOne({shopId:shopId}, {menu:menu})
 

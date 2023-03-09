@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon index.js",
     "json-server": "npx json-server pincode.json --watch --port 4000",
-    "start": "start npm run server && start npm run json-server"
+    "dev": "(start npm run server && start npm run json-server) || (npm run server & npm run json-server)",
+    "start": "npm run dev"
   },
   "repository": {
     "type": "git",

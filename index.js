@@ -1,8 +1,12 @@
 const express = require('express')
 const { router } = require('json-server')
 const mongoose = require('mongoose')
+const userModel = require('./models/userModel')
 const routers = require("./routes/index")
 const app = express()
+const bcrypt = require("bcryptjs")
+const pinCodeModel = require('./models/pinCodeModel')
+const axios = require('axios')
 
 app.use(express.json())
 
@@ -29,7 +33,36 @@ app.listen(8081, ()=>{
 })
 
 mongoose.connect("mongodb://localhost/LOD")
-.then((res)=>console.log("connected to db"))
+.then(
+    async(res)=>{
+        console.log("connected to db");
+        const user = await userModel.findOne({email:"adityaprasad246278@gmail.com"})
+        if(user===null){
+            const admin = {
+                userId: "A89431",
+                firstName: "Aditya",
+                lastName: "Behera",
+                email: "adityaprasad246278@gmail.com",
+                password: bcrypt.hashSync("adityaaditya", 8),
+                phoneNumber: "7008362725",
+                address:{ 
+                    state: "ODISHA",
+                    district: "Ganjam",
+                    city: "Berhampur",
+                    pinCode: 760003,
+                    landMark: "near that temple",
+                    locality: "Haladiapadar B.O"
+                },
+                cardDetails: [1, 2].map((card)=>{
+                    return {cardId: card, cardNumber:"1234"}
+                })
+                ,
+                role: "ADMIN"
+            }
+            await userModel.create(admin)
+            console.log("admin created")
+        }
+    })
 .catch((err)=>{console.log(err)})
 
 app.use("/lod", routers)

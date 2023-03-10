@@ -4,6 +4,7 @@ const userRouter = require("./user")
 const adminRouter = require("./admin")
 const shopRouter = require("./shop")
 const productRouter = require("./product")
+const pinCodeModel = require("../models/pinCodeModel")
 
 router.get("/home", (req, res)=>{
     return res.status(200).send("Home Page")
@@ -16,5 +17,4 @@ router.use("/admin", adminRouter)
 router.use("/shop", shopRouter)
 
 router.use("/product", productRouter)
-
 module.exports = router

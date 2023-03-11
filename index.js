@@ -8,6 +8,27 @@ const bcrypt = require("bcryptjs")
 const pinCodeModel = require('./models/pinCodeModel')
 const axios = require('axios')
 
+//running json server
+const jsonServer = require('json-server')
+const cors = require('cors')
+const path = require('path')
+
+const jServer = jsonServer.create()
+const jrouter = jsonServer.router(path.join(__dirname, 'pincode.json'))
+const middlewares = jsonServer.defaults()
+
+jServer.use(cors())
+jServer.use(jsonServer.bodyParser)
+jServer.use(middlewares)
+jServer.use(jrouter)
+
+const PORT = 4000
+
+jServer.listen(PORT, () => {
+  console.log(`JSON Server is running on http://localhost:${PORT}`)
+})
+
+//running backend server
 app.use(express.json())
 
 app.use((req, res, next)=>{

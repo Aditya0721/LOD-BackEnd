@@ -48,6 +48,7 @@ exports.verifyToken = (req, res, next)=>{
         }
         console.log(decoded)
         req.role = decoded._doc.role
+        req.user = decoded._doc
         console.log(req.role)
         next()    
     })

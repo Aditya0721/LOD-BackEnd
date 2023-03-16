@@ -65,7 +65,8 @@ const userSchema = new mongoose.Schema({
         type:String,
         enum:['CUSTOMER', 'SHOP KEEPER', 'ADMIN'],
         default: 'CUSTOMER'
-    }
+    },
+    cart:[]
 }, { timestamps: true })
 
 const userModel = mongoose.model('User',  userSchema)

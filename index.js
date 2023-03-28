@@ -83,8 +83,8 @@ mongoose.connect("mongodb://localhost/LOD")
             }
             await userModel.create(admin)
             console.log("admin created")
-
-            const products = await productModel.find();
+        }
+        const products = await productModel.find();
             if(products.length===0){
                 const allProducts = [
                     {
@@ -99,8 +99,8 @@ mongoose.connect("mongodb://localhost/LOD")
                     }
                 ]
                 await productModel.create(allProducts);
+                console.log("products created");
             }
-        }
     })
 .catch((err)=>{console.log(err)})
 

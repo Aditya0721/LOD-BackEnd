@@ -12,6 +12,7 @@ const axios = require('axios')
 const jsonServer = require('json-server')
 const cors = require('cors')
 const path = require('path')
+const productModel = require('./models/productModel')
 
 const jServer = jsonServer.create()
 const jrouter = jsonServer.router(path.join(__dirname, 'pincode.json'))
@@ -82,6 +83,23 @@ mongoose.connect("mongodb://localhost/LOD")
             }
             await userModel.create(admin)
             console.log("admin created")
+
+            const products = await productModel.find();
+            if(products.length===0){
+                const allProducts = [
+                    {
+                        productName:"Ketel One Vodka",
+                        brand:"Tito's Vodka",
+                        type:"VODKA"
+                    },
+                    {
+                        brand:"SEAGRAMS",
+                        productName:"BLENDERS PRIDE",
+                        type:"WHISKEY"
+                    }
+                ]
+                await productModel.create(allProducts);
+            }
         }
     })
 .catch((err)=>{console.log(err)})

@@ -87,12 +87,14 @@ mongoose.connect("mongodb://localhost/LOD")
         const products = await productModel.find();
             if(products.length===0){
                 const allProducts = [
-                    {
+                    {   
+                        productId:"K14733",
                         productName:"Ketel One Vodka",
                         brand:"Tito's Vodka",
                         type:"VODKA"
                     },
                     {
+                        productId:"B85122", 
                         brand:"SEAGRAMS",
                         productName:"BLENDERS PRIDE",
                         type:"WHISKEY"

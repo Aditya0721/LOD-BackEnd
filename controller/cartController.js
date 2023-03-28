@@ -7,6 +7,8 @@ exports.updateCart = async(req, res)=>{
 
     const updatedCart = req.body.cart
 
+    console.log(updatedCart)
+    
     const result = await userModel.updateOne({userId:userId},{cart:updatedCart})
     
     if(result)
